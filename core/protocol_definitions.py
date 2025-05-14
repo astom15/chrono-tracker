@@ -19,11 +19,12 @@ class ReadInputSKUsParams(BaseModel):
     sheet_name: str
     worksheet_name: str
 
+# might need to change some things as ref number and movement arent always present
 class InputSKUData(BaseModel):
     "Single row of SKU data."
     Brand: str
     Model: str
-    ReferenceNumber: str
+    ReferenceNumber: Optional[str] = None
     Movement: str
     Case: str
     DialColor: Optional[str] = None
@@ -33,7 +34,7 @@ class InputSKUData(BaseModel):
     ListPrice: Optional[float] = None
     ExcludeKeywords: Optional[str] = None
 
-class ReadInputSkusData(BaseModel):
+class ReadInputSKUsData(BaseModel):
     "Data returned by read_input_skus tool."
     skus: List[InputSKUData]
 
@@ -50,6 +51,13 @@ class ScrapedListingData(BaseModel):
     "Single scraped listing data sans ID."
     input_search_query_attributes: Optional[Dict[str, Any]] = None
     listing_url: str
+    brand: Optional[str] = None
+    model: Optional[str] = None
+    case_material: Optional[str] = None
+    reference_number: Optional[str] = None
+    dial: Optional[str] = None
+    dial_color: Optional[str] = None
+    movement: Optional[str] = None
     listing_title: Optional[str] = None
     price: Optional[float] = None
     currency: Optional[str] = None
@@ -58,7 +66,7 @@ class ScrapedListingData(BaseModel):
     location: Optional[str] = None
     seller_name: Optional[str] = None
 
-class ScrapeListingsData(BaseModel):
+class ScrapedListingsData(BaseModel):
     "Data returned by scrape_listings action."
     scraped_items: List[ScrapedListingData]
 

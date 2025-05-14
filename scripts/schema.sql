@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS listings (
     id SERIAL PRIMARY KEY,
     input_sku_attributes JSONB,
     scraped_timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    listing_url TEXT NOT NULL UNIQUE,
+    listing_url TEXT NOT NULL,
     listing_title TEXT,
     price NUMERIC(14,2),
     currency VARCHAR(10),
