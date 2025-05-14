@@ -231,7 +231,7 @@ class ChronoScraperTool(BaseTool):
                 condition_str = self._get_detail_from_pairs(details_container, 'Condition')
                 location_str = self._get_detail_from_pairs(details_container, 'Location')
                 reference_str = self._get_detail_from_pairs(details_container, 'Reference number')
-                condition = self._get_detail_from_pairs(details_container, 'Condition')
+                condition_str = self._get_detail_from_pairs(details_container, 'Condition')
                 
                 if html_listing_url and html_full_title and html_price is not None:
                     listing = ScrapedListingData(
