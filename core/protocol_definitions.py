@@ -41,11 +41,6 @@ class ReadInputSKUsData(BaseModel):
 class ScrapeListingsParams(BaseModel):
     "Parameters for the 'scrape_listings' action of ChronoScraperTool."
     search_query_string:str
-    target_condition: Optional[str] = None
-    target_year_min: Optional[int] = None
-    target_year_max: Optional[int] = None
-    target_location: Optional[str] = None
-    exclude_keywords: Optional[List[str]] = None
 
 class ScrapedListingData(BaseModel):
     "Single scraped listing data sans ID."
@@ -81,6 +76,11 @@ class SaveListingsData(BaseModel):
 class QueryLatestListingsParams(BaseModel):
     "Parameters for query_latest_filtered_listings action."
     input_sku_attributes_json: str
+    target_condition: Optional[str] = None
+    target_year_min: Optional[int] = None
+    target_year_max: Optional[int] = None
+    target_location: Optional[str] = None
+    exclude_keywords: Optional[List[str]] = None
     limit: int = 20
 
 class QueryLatestListingsData(BaseModel):

@@ -258,7 +258,46 @@ class ChronoScraperTool(BaseTool):
         else:
             self.logger.warning("No listings parsed from HTML")
         return scraped_items
+        
+    def _parse_listings_from_html(self, html_content: str, search_query_attributes: Dict[str, Any]) -> List[ScrapedListingData]:
+        "Parses scraped listings from HTML content"
+        self.logger.debug(f"Parsing listings from HTML content (length: {len(html_content)}) chars.")
+        scraped_listings: List[ScrapedListingsData] = self._parse_direct_HTML_tag_listings(html_content, search_query_attributes)
+        return scraped_listings
     
-    def _parse_listings_from_html(self,html_content: str, search_query_attributes: Dict[str,Any]) -> List[ScrapedListingData]:
-        scraped_listings: List[ScrapedListingData] = self._parse_direct_HTML_tag_listings(html_content, search_query_attributes)
+    # TODO: need to deal with pagination later
+    async def _handle_scrape_listings(self, params: ScrapeListingsParams, original_input_attributes: Dict[str,Any]) -> ScrapedListingsData:
+        "Handles the scrape_listings action"
+        self.logger.info(f"Starting scrape_listings action with params: {params}")
+        search_url = f"{self.base_url}{self.search_path}?dosearch=true&query={params.search_query_string.replace(' ', '+')}"
+        html_content = None
+        async with aiohttp.ClientSession() as session:
+            for attempt in range(1, self.max_retries_per_request + 1):
+                html_content = await self._fetch_html(session, search_url, attempt)
+                if html_content:
+                    break
+                elif attempt < self.max_retries_per_request:
+                    self.logger.info(f"Retrying fetch for {search_url} (Attempt {attempt+1}/{self.max_retries}) after delay.")
+                else:
+                    self.logger.error(f"All {self.max_retries_per_request} attempts failed for {search_url}")
+        if not html_content:
+            raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+        loop = asyncio.get_event_loop()
+        all_parsed_listings = await loop.run_in_executor(
+            None,
+            self._parse_listings_from_html,
+            html_content,
+            original_input_attributes
+        )
+        return ScrapedListingsData(scraped_items=all_parsed_listings)
+
+    async def execute(self, request: ToolRequest) -> ToolResponse:
+        "Executes an action requested for the ChronoScraperTool"
+        self.logger.info(f"Received request for action: {request.action} with params: {request.params}")
+        action_handler = None
+        if request.action == "scrape_listings":
+            action_handler = self._handle_scrape_listings
+        else:
+            return self._create_error_response(f"Unsupported action: {request.action} for tool: {self.tool_name}", request_params=request.params)
+        
 
