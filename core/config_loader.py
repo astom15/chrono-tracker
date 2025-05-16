@@ -29,7 +29,7 @@ def load_configurations(config_file_path='config/main_config.ini', env_file_path
             loaded = load_dotenv(override=True)
             logger.debug(f".env file loaded from default path. Loaded: {loaded}")
         _env_loaded = True
-
+    
 
     if _config_ini is None:
         _config_ini = configparser.ConfigParser()

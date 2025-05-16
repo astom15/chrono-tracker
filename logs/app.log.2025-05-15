@@ -1,0 +1,510 @@
+2025-05-15 17:50:08 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 17:50:08 - core.config_loader - WARNING - Setting 'base_url' in section 'Chrono24ScraperTool' (env vars: ['CHRONO24SCRAPERTOOL_BASE_URL']) not found and no default provided.
+2025-05-15 17:50:08 - core.config_loader - WARNING - Setting 'default_search_path' in section 'Chrono24ScraperTool' (env vars: ['CHRONO24SCRAPERTOOL_DEFAULT_SEARCH_PATH']) not found and no default provided.
+2025-05-15 17:50:08 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 17:50:08 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: None, Delay: 1.0s, Max retries: 1
+2025-05-15 17:50:08 - TestChrono24ScraperTool - INFO - Sending request to Chrono24ScraperTool: {
+  "tool_name": "Chrono24ScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 17:50:08 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 17:50:08 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 17:50:09 - tool.ChronoScraperTool - WARNING - Client error fetching NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/1: NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 17:50:09 - tool.ChronoScraperTool - ERROR - All 1 attempts failed for NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 17:50:09 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Failed to fetch HTML content from NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold after 1 attempts
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 309, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 284, in _handle_scrape_listings
+    raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+RuntimeError: Failed to fetch HTML content from NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold after 1 attempts
+2025-05-15 17:50:09 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Failed to fetch HTML content from NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold after 1 attempts. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 17:50:09 - TestChrono24ScraperTool - INFO - Received response from Chrono24ScraperTool:
+2025-05-15 18:00:29 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 18:00:29 - core.config_loader - WARNING - Setting 'base_url' in section 'Chrono24ScraperTool' (env vars: ['CHRONO24SCRAPERTOOL_BASE_URL']) not found and no default provided.
+2025-05-15 18:00:29 - core.config_loader - WARNING - Setting 'default_search_path' in section 'Chrono24ScraperTool' (env vars: ['CHRONO24SCRAPERTOOL_DEFAULT_SEARCH_PATH']) not found and no default provided.
+2025-05-15 18:00:29 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 18:00:29 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: None, Delay: 1.0s, Max retries: 1
+2025-05-15 18:00:29 - TestChrono24ScraperTool - INFO - Sending request to Chrono24ScraperTool: {
+  "tool_name": "Chrono24ScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 18:00:29 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:00:29 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 18:00:30 - tool.ChronoScraperTool - WARNING - Client error fetching NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/1: NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 18:00:30 - tool.ChronoScraperTool - ERROR - All 1 attempts failed for NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 18:00:30 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Failed to fetch HTML content from NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold after 1 attempts
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 309, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 284, in _handle_scrape_listings
+    raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+RuntimeError: Failed to fetch HTML content from NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold after 1 attempts
+2025-05-15 18:00:30 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Failed to fetch HTML content from NoneNone?dosearch=true&query=Cartier+Tank+Automatic+Gold after 1 attempts. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:00:30 - TestChrono24ScraperTool - INFO - Received response from Chrono24ScraperTool:
+2025-05-15 18:01:00 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 18:01:00 - core.config_loader - WARNING - Setting 'base_url' in section 'ChronoScraperTool' (env vars: ['CHRONOSCRAPERTOOL_BASE_URL']) not found and no default provided.
+2025-05-15 18:01:00 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 18:01:00 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: None, Delay: 1.0s, Max retries: 3
+2025-05-15 18:01:00 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 18:01:00 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:01:00 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 18:01:01 - tool.ChronoScraperTool - WARNING - Client error fetching None/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: None/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 18:01:01 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: 'ChronoScraperTool' object has no attribute 'max_retries'
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 309, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 280, in _handle_scrape_listings
+    self.logger.info(f"Retrying fetch for {search_url} (Attempt {attempt+1}/{self.max_retries}) after delay.")
+                                                                             ^^^^^^^^^^^^^^^^
+AttributeError: 'ChronoScraperTool' object has no attribute 'max_retries'
+2025-05-15 18:01:01 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: 'ChronoScraperTool' object has no attribute 'max_retries'. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:01:01 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 18:29:53 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 18:29:53 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 18:29:53 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 18:29:53 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 18:29:53 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:29:53 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 18:29:54 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: unsupported operand type(s) for /: 'int' and 'set'
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 47, in _fetch_html
+    response.raise_for_status()
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client_reqrep.py", line 1161, in raise_for_status
+    raise ClientResponseError(
+aiohttp.client_exceptions.ClientResponseError: 403, message='Forbidden', url='https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 309, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 276, in _handle_scrape_listings
+    html_content = await self._fetch_html(session, search_url, attempt)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 52, in _fetch_html
+    self.logger.warning(f"HTTP error fetching {url}. Attempt {attempt/{self.max_retries_per_request}}: {e.status} {e.message}")
+                                                              ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for /: 'int' and 'set'
+2025-05-15 18:29:54 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: unsupported operand type(s) for /: 'int' and 'set'. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:29:54 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 18:38:49 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 18:38:49 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 18:38:49 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 18:38:49 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 18:38:49 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:38:49 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 18:38:51 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 400 Can not decode content-encoding: brotli (br). Please install `Brotli`
+2025-05-15 18:38:51 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 18:38:51 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 18:38:53 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 2/3: 400 Can not decode content-encoding: brotli (br). Please install `Brotli`
+2025-05-15 18:38:53 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 3/3) after delay.
+2025-05-15 18:38:53 - tool.ChronoScraperTool - INFO - Retrying attempt 3, waiting for 3.0 seconds...
+2025-05-15 18:38:56 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 3/3: 400 Can not decode content-encoding: brotli (br). Please install `Brotli`
+2025-05-15 18:38:56 - tool.ChronoScraperTool - ERROR - All 3 attempts failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 18:38:56 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 332, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 307, in _handle_scrape_listings
+    raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+RuntimeError: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+2025-05-15 18:38:56 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:38:56 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 18:55:07 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 18:55:07 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 18:55:07 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 18:55:07 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 18:55:07 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:55:07 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 18:55:08 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 400 Can not decode content-encoding: brotli (br). Please install `Brotli`
+2025-05-15 18:55:08 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 18:55:08 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 18:55:10 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 2/3: 400 Can not decode content-encoding: brotli (br). Please install `Brotli`
+2025-05-15 18:55:10 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 3/3) after delay.
+2025-05-15 18:55:10 - tool.ChronoScraperTool - INFO - Retrying attempt 3, waiting for 3.0 seconds...
+2025-05-15 18:55:37 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 18:55:37 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 18:55:37 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 18:55:37 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 18:55:37 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:55:37 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 18:55:38 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 403 Forbidden
+2025-05-15 18:55:38 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 18:55:38 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 18:55:40 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 2/3: 403 Forbidden
+2025-05-15 18:55:40 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 3/3) after delay.
+2025-05-15 18:55:40 - tool.ChronoScraperTool - INFO - Retrying attempt 3, waiting for 3.0 seconds...
+2025-05-15 18:55:43 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 3/3: 403 Forbidden
+2025-05-15 18:55:43 - tool.ChronoScraperTool - ERROR - Final attempt failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold with error: 403
+2025-05-15 18:55:43 - tool.ChronoScraperTool - ERROR - All 3 attempts failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 18:55:43 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 332, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 307, in _handle_scrape_listings
+    raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+RuntimeError: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+2025-05-15 18:55:43 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 18:55:43 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 19:01:31 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:01:31 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:01:31 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 19:01:31 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 19:01:31 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:01:31 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 19:01:32 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 403 Forbidden
+2025-05-15 19:01:32 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 19:01:32 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 19:01:34 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 2/3: 403 Forbidden
+2025-05-15 19:01:34 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 3/3) after delay.
+2025-05-15 19:01:34 - tool.ChronoScraperTool - INFO - Retrying attempt 3, waiting for 3.0 seconds...
+2025-05-15 19:01:37 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 3/3: 403 Forbidden
+2025-05-15 19:01:37 - tool.ChronoScraperTool - ERROR - Final attempt failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold with error: 403
+2025-05-15 19:01:37 - tool.ChronoScraperTool - ERROR - All 3 attempts failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 19:01:37 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 332, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 307, in _handle_scrape_listings
+    raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+RuntimeError: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+2025-05-15 19:01:37 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:01:37 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 19:02:21 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:02:21 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:02:21 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 19:02:21 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 19:02:21 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:02:21 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 19:02:22 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 403 Forbidden
+2025-05-15 19:02:22 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 19:02:22 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 19:37:13 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:37:13 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:37:13 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 19:37:13 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 19:37:13 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:37:13 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 19:37:15 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 403 Forbidden
+2025-05-15 19:37:15 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 19:37:15 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 19:43:46 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:43:46 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:44:03 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:44:03 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:45:25 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:45:25 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:45:25 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 19:45:25 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 19:45:25 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:45:25 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 19:45:26 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Cannot serialize non-str key ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36']
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 334, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 301, in _handle_scrape_listings
+    html_content = await self._fetch_html(session, search_url, attempt)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 71, in _fetch_html
+    async with session.get(url, headers=headers, timeout=self.config.get('default_request_timeout_seconds', 30)) as response:
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client.py", line 728, in _request
+    resp = await req.send(conn)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client_reqrep.py", line 752, in send
+    await writer.write_headers(status_line, self.headers)
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/http_writer.py", line 166, in write_headers
+    buf = _serialize_headers(status_line, headers)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_http_writer.pyx", line 146, in aiohttp._http_writer._serialize_headers
+  File "aiohttp/_http_writer.pyx", line 108, in aiohttp._http_writer._write_str_raise_on_nlcr
+TypeError: Cannot serialize non-str key ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36']
+2025-05-15 19:45:26 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Cannot serialize non-str key ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36']. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:45:26 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 19:52:27 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:52:27 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:52:27 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 19:52:27 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 19:52:27 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:52:27 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 19:52:28 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Cannot serialize non-str key ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36']
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 334, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 301, in _handle_scrape_listings
+    html_content = await self._fetch_html(session, search_url, attempt)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 71, in _fetch_html
+    async with session.get(url, headers=headers, timeout=self.config.get('default_request_timeout_seconds', 30)) as response:
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client.py", line 728, in _request
+    resp = await req.send(conn)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/client_reqrep.py", line 752, in send
+    await writer.write_headers(status_line, self.headers)
+  File "/Users/andretom/.pyenv/versions/3.11.8/envs/chrono-env/lib/python3.11/site-packages/aiohttp/http_writer.py", line 166, in write_headers
+    buf = _serialize_headers(status_line, headers)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "aiohttp/_http_writer.pyx", line 146, in aiohttp._http_writer._serialize_headers
+  File "aiohttp/_http_writer.pyx", line 108, in aiohttp._http_writer._write_str_raise_on_nlcr
+TypeError: Cannot serialize non-str key ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36']
+2025-05-15 19:52:28 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Cannot serialize non-str key ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36']. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:52:28 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 19:59:39 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 19:59:39 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 19:59:39 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 19:59:39 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 19:59:39 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:59:39 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 19:59:40 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 403 Forbidden
+2025-05-15 19:59:40 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 19:59:40 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
+2025-05-15 19:59:42 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 2/3: 403 Forbidden
+2025-05-15 19:59:42 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 3/3) after delay.
+2025-05-15 19:59:42 - tool.ChronoScraperTool - INFO - Retrying attempt 3, waiting for 3.0 seconds...
+2025-05-15 19:59:45 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 3/3: 403 Forbidden
+2025-05-15 19:59:45 - tool.ChronoScraperTool - ERROR - Final attempt failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold with error: 403
+2025-05-15 19:59:45 - tool.ChronoScraperTool - ERROR - All 3 attempts failed for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold
+2025-05-15 19:59:45 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 339, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 314, in _handle_scrape_listings
+    raise RuntimeError(f"Failed to fetch HTML content from {search_url} after {self.max_retries_per_request} attempts")
+RuntimeError: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts
+2025-05-15 19:59:45 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: Failed to fetch HTML content from https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold after 3 attempts. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 19:59:45 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 20:43:26 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 20:43:26 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 20:43:26 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 20:43:26 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 20:43:26 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 20:43:26 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 20:43:27 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com. Attempt 1/3: 403 Forbidden
+2025-05-15 20:43:27 - tool.ChronoScraperTool - WARNING - Failed to fetch homepage content on first attempt, proceeding without it.
+2025-05-15 20:43:27 - tool.ChronoScraperTool - ERROR - Error executing action scrape_listings: 'ChronoScraperTool' object has no attribute 'max_retries'
+Traceback (most recent call last):
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 363, in execute
+    response = await action_handler(params_model, input_attributes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andretom/Projects/chrono-tracker/tools/chrono_scraper_tool.py", line 328, in _handle_scrape_listings
+    for attempt in range(1, self.max_retries + 1):
+                            ^^^^^^^^^^^^^^^^
+AttributeError: 'ChronoScraperTool' object has no attribute 'max_retries'
+2025-05-15 20:43:27 - tool.ChronoScraperTool - ERROR - Action failed. Error: Error executing action scrape_listings: 'ChronoScraperTool' object has no attribute 'max_retries'. Request params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 20:43:27 - TestChrono24ScraperTool - INFO - Received response from ChronoScraperTool:
+2025-05-15 20:43:58 - root - INFO - Logging setup complete. Log level: INFO. Logging to: logs/app.log
+2025-05-15 20:43:58 - tool.ChronoScraperTool - INFO - Tool 'ChronoScraperTool' initialized.
+2025-05-15 20:43:58 - tool.ChronoScraperTool - INFO - ChronoScraperTool initialized. Base URL: https://www.chrono24.com, Delay: 1.0s, Max retries: 3
+2025-05-15 20:43:58 - TestChrono24ScraperTool - INFO - Sending request to ChronoScraperTool: {
+  "tool_name": "ChronoScraperTool",
+  "action": "scrape_listings",
+  "params": {
+    "search_query_string": "Cartier Tank Automatic Gold"
+  },
+  "context": {
+    "original_input_attributes": {
+      "Brand": "Cartier",
+      "Model": "Tank",
+      "Keywords": "Automatic Gold"
+    }
+  }
+}
+2025-05-15 20:43:58 - tool.ChronoScraperTool - INFO - Received request for action: scrape_listings with params: {'search_query_string': 'Cartier Tank Automatic Gold'}
+2025-05-15 20:43:58 - tool.ChronoScraperTool - INFO - Starting scrape_listings action with params: search_query_string='Cartier Tank Automatic Gold'
+2025-05-15 20:43:59 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com. Attempt 1/3: 403 Forbidden
+2025-05-15 20:43:59 - tool.ChronoScraperTool - WARNING - Failed to fetch homepage content on first attempt, proceeding without it.
+2025-05-15 20:44:00 - tool.ChronoScraperTool - WARNING - HTTP error fetching https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold. Attempt 1/3: 403 Forbidden
+2025-05-15 20:44:00 - tool.ChronoScraperTool - INFO - Retrying fetch for https://www.chrono24.com/search/index.htm?dosearch=true&query=Cartier+Tank+Automatic+Gold (Attempt 2/3) after delay.
+2025-05-15 20:44:00 - tool.ChronoScraperTool - INFO - Retrying attempt 2, waiting for 2.0 seconds...
