@@ -1,5 +1,0 @@
-2025-05-12 21:17:43 - root - INFO - Logging setup complete. Log level: DEBUG. Logging to: logs/app.log
-2025-05-12 21:17:43 - asyncio - DEBUG - Using selector: KqueueSelector
-2025-05-12 21:17:43 - MainApp - INFO - Main app started.
-2025-05-12 21:17:43 - MainApp - DEBUG - This is a debug message from main_async_logic.
-2025-05-12 21:17:44 - MainApp - INFO - Main app finishing.

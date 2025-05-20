@@ -48,7 +48,7 @@ class ChronoScraperTool(BaseTool):
             f"Delay: {self.request_delay_seconds}s, "
             f"Max retries: {self.max_retries_per_request}"
         )
-        self.playwright_headless = self.config.get("playwright_headless", True)
+        self.playwright_headless = self.config.get("playwright_headless", False)
         self.playwright_instance = None
         self.browser = None
 
@@ -99,6 +99,26 @@ class ChronoScraperTool(BaseTool):
                 headers["Referer"] = referer
         return {k: v for k, v in headers.items() if v is not None}
 
+    async def _handle_popup(self, page: Page):
+        """Handles a popup on the page"""
+        popup_accept_selectors = [
+            "dialog.gdpr-layer button.js-cookie-accept-all",
+            "dialog.gdpr-layer button.btn-primary:has-text('OK')",
+        ]
+        popup_handled = False
+        for selector in popup_accept_selectors:
+            try:
+                await page.locator(selector).click(timeout=3000)
+                popup_handled = True
+                await asyncio.sleep(random.uniform(0.5, 1.0))
+                break
+            except TimeoutError:
+                self.logger.debug(f"Popup not found with selector: {selector}. Timed out")
+            except PlaywrightError as e:
+                self.logger.debug(f"Popup not found with selector: {selector}. Error: {e}")
+        if not popup_handled:
+            self.logger.warning("No popup accept button found. Proceeding with scrape.")
+
     async def _fetch_html(self, url: str, attempt: int) -> str | None:
         """Fetches the HTML content from a url with playwright."""
         browser = await self._get_browser()
@@ -129,9 +149,10 @@ class ChronoScraperTool(BaseTool):
             response = await page.goto(
                 url,
                 timeout=self.config.get("default_request_timeout_seconds", 60) * 1000,
-                wait_until="domcontentloaded",
+                wait_until="networkidle",
             )
             if response:
+                await self._handle_popup(page)
                 self.logger.debug(f"Playwright response status for {url}: {response.status}")
                 if response.status != 200:
                     self.logger.warning(
@@ -142,6 +163,7 @@ class ChronoScraperTool(BaseTool):
                             f"Playwright final attempt failed for {url} with critical HTTP error: {response.status}"
                         )
                     return None
+                await page.wait_for_selector("div#wt-watches")
                 html_content = await page.content()
                 self.logger.debug(
                     f"Playwright successfully fetched URL: {url}, status: {response.status}, content length: {len(html_content)}"
@@ -272,6 +294,10 @@ class ChronoScraperTool(BaseTool):
             try:
                 # probably put these hardcoded tags in a config file later
                 # abstract some stuff also
+                print("000000000000000000000000000")
+                print(elem.prettify())
+                print("000000000000000000000000000")
+
                 link_element = elem.select_one("a.js-article-item.article-item")
                 html_listing_url_relative = (
                     link_element["href"] if link_element and link_element.has_attr("href") else None
@@ -281,20 +307,22 @@ class ChronoScraperTool(BaseTool):
                     if html_listing_url_relative and html_listing_url_relative.startswith("/")
                     else html_listing_url_relative
                 )
-                main_title_div = elem.select_one("div.text-sm.text-sm-xlg.text-bold.text-ellipsis")
+
+                main_title_div = elem.select_one("div.text-sm.text-sm-md.text-bold.text-ellipsis")
                 main_title_html = main_title_div.get_text(strip=True) if main_title_div else None
-                sub_title_div = elem.select_one("div.text-sm.text-sm-lg.text-ellipsis.p-r-5")
+                sub_title_div = elem.select_one("div.text-sm.text-sm-md.text-ellipsis.m-b-2")
                 sub_title_html = sub_title_div.get_text(strip=True) if sub_title_div else None
                 html_brand, html_model, html_full_title = self._parse_brand_model_from_title(
                     main_title_html, sub_title_html
                 )
 
                 price_container = elem.select_one("div.text-lg.text-sm-xlg.text-bold")
+                print(price_container)
                 price_text_raw_html = price_container.get_text(strip=True) if price_container else None
                 html_price, html_currency = self._extract_price_currency(price_text_raw_html)
 
-                details_container = elem.select_one("div.d-none.d-sm-flex.m-b-sm-3.flex-wrap")
-
+                details_container = elem.select_one("div.d-sm-flex.m-b-sm-3.flex-wrap")
+                print(html_price, html_currency)
                 movement_str = self._get_details_from_pairs(details_container, "Movement")
                 case_material_str = self._get_details_from_pairs(details_container, "Case material")
                 year_str = self._get_details_from_pairs(details_container, "Year of production")
@@ -302,6 +330,18 @@ class ChronoScraperTool(BaseTool):
                 location_str = self._get_details_from_pairs(details_container, "Location")
                 reference_str = self._get_details_from_pairs(details_container, "Reference number")
                 condition_str = self._get_details_from_pairs(details_container, "Condition")
+                # print(html_listing_url)
+                # print(html_full_title)
+                # print(html_brand)
+                # print(html_model)
+                # print(html_price)
+                # print(html_currency)
+                # print(movement_str)
+                # print(case_material_str)
+                # print(year_str)
+                # print(condition_str)
+                # print(location_str)
+                # print(reference_str)
 
                 if html_listing_url and html_full_title and html_price is not None:
                     listing = ScrapedListingData(
@@ -354,26 +394,18 @@ class ChronoScraperTool(BaseTool):
         )
         html_content = None
         try:
-            self.logger.debug(f"Attempting to visit homepage: {self.base_url}")
-            homepage_html = await self._fetch_html(self.base_url, attempt=1)
-            if homepage_html:
-                self.logger.info("Successfully visited homepage with Playwright")
-                await asyncio.sleep(random.uniform(1.0, self.request_delay_seconds / 2))
-            else:
-                self.logger.warning("Failed to fetch homepage content on first attempt, proceeding without it.")
+            for attempt in range(1, self.max_retries_per_request + 1):
+                html_content = await self._fetch_html(search_url, attempt)
+                if html_content:
+                    break
+                elif attempt < self.max_retries_per_request:
+                    self.logger.info(
+                        f"Retrying fetch for {search_url} (Attempt {attempt + 1}/{self.max_retries_per_request}) after delay."
+                    )
+                else:
+                    self.logger.error(f"All {self.max_retries_per_request} retries failed for search URL: {search_url}")
         except Exception as e:
-            self.logger.warning(f"Error visiting homepage {self.base_url}: {e}. Proceeding to search.")
-
-        for attempt in range(1, self.max_retries_per_request + 1):
-            html_content = await self._fetch_html(search_url, attempt)
-            if html_content:
-                break
-            elif attempt < self.max_retries_per_request:
-                self.logger.info(
-                    f"Retrying fetch for {search_url} (Attempt {attempt + 1}/{self.max_retries_per_request}) after delay."
-                )
-            else:
-                self.logger.error(f"All {self.max_retries_per_request} retries failed for search URL: {search_url}")
+            self.logger.exception(f"Error fetching HTML content from {search_url}: {e}")
 
         if not html_content:
             raise RuntimeError(
@@ -460,8 +492,8 @@ if __name__ == "__main__":
         scraper_tool = ChronoScraperTool(config=scraper_config_data)
 
         try:
-            test_search_query = "Cartier Tank Automatic Gold"
-            test_input_attrs = {"Brand": "Cartier", "Model": "Tank", "Keywords": "Automatic Gold"}
+            test_search_query = "Cartier crash"
+            test_input_attrs = {"Brand": "Cartier", "Model": "crash", "Keywords": "Gold"}
 
             scrape_params = ScrapeListingsParams(search_query_string=test_search_query)
 
