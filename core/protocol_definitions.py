@@ -40,7 +40,7 @@ class InputSKUData(BaseModel):
     Dial: str | None = None
     Bracelet: str | None = None
     Bezel: str | None = None
-    ListPrice: float | None = None
+    ListPrice: float | str | None = None
     ExcludeKeywords: str | None = None
 
 
@@ -69,7 +69,7 @@ class ScrapedListingData(BaseModel):
     dial_color: str | None = None
     movement: str | None = None
     listing_title: str | None = None
-    price: float | None = None
+    price: float | str | None = None
     currency: str | None = None
     condition: str | None = None
     year_of_production: int | None = None
@@ -116,7 +116,7 @@ class CalculateMarketAverageParams(BaseModel):
     "Parameters for calculate_market_average action."
 
     listings_data: list[ScrapedListingData]
-    your_list_price: float
+    your_list_price: float | str
 
 
 class MarketAverageData(BaseModel):

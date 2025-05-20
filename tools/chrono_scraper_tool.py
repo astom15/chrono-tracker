@@ -119,6 +119,20 @@ class ChronoScraperTool(BaseTool):
         if not popup_handled:
             self.logger.warning("No popup accept button found. Proceeding with scrape.")
 
+    async def _change_view_to_list(self, page: Page):
+        """Changes the view to list"""
+        view_changed_to_list = False
+        try:
+            await page.locator("a.result-view-switcher").click(timeout=3000)
+            view_changed_to_list = True
+            await asyncio.sleep(random.uniform(0.5, 1.0))
+        except TimeoutError:
+            self.logger.debug("View not changed to list. Timed out")
+        except PlaywrightError as e:
+            self.logger.debug(f"View not changed to list. Error: {e}")
+        if not view_changed_to_list:
+            self.logger.warning("View not changed to list. Proceeding with scrape.")
+
     async def _fetch_html(self, url: str, attempt: int) -> str | None:
         """Fetches the HTML content from a url with playwright."""
         browser = await self._get_browser()
@@ -163,7 +177,7 @@ class ChronoScraperTool(BaseTool):
                             f"Playwright final attempt failed for {url} with critical HTTP error: {response.status}"
                         )
                     return None
-                await page.wait_for_selector("div#wt-watches")
+                await self._change_view_to_list(page)
                 html_content = await page.content()
                 self.logger.debug(
                     f"Playwright successfully fetched URL: {url}, status: {response.status}, content length: {len(html_content)}"
@@ -194,13 +208,15 @@ class ChronoScraperTool(BaseTool):
         target = element.select_one(selector)
         return target.get_text(strip=True) if target else default
 
-    def _extract_price_currency(self, price_text_raw: str | None) -> tuple[float | None, str | None]:
+    def _extract_price_currency(self, price_text_raw: str | None) -> tuple[float | str | None, str | None]:
         """Extracts numerical price and currency symbol from a price string // fallback from JSON-LD"""
         if not price_text_raw:
             return None, None
+        if price_text_raw.lower().strip() == "price on request":
+            return "price on request", None
         price_value = None
         currency_symbol_extracted = None
-        currency_match = re.search(r"[$€£¥₹]|[A-Z]{3})", price_text_raw)
+        currency_match = re.search(r"([$€£¥₹]|[A-Z]{3})", price_text_raw)
         if currency_match:
             currency_symbol_extracted = currency_match.group(0)
 
@@ -271,12 +287,19 @@ class ChronoScraperTool(BaseTool):
         for pair in detail_pairs:
             label_div = pair.select_one("div.col-xs-12:not(.text-ellipsis)")
             if label_div and label_text.lower() in label_div.get_text(strip=True).lower():
-                value_div = pair.select_one("div.col-xs-12.text-ellipsis strong")
-                if value_div:
-                    return value_div.get_text(strip=True)
-                value_div_no_strong = pair.select_one("div.col-xs-12.text-ellipsis")
-                if value_div_no_strong:
-                    return value_div_no_strong.get_text(strip=True)
+                value_text = None
+                value_strong = pair.select_one("div.col-xs-12.text-ellipsis strong")
+                if value_strong:
+                    value_text = value_strong.get_text(strip=True)
+                else:
+                    value_div = pair.select_one("div.col-xs-12.text-ellipsis")
+                    if value_div:
+                        value_text = value_div.get_text(strip=True)
+                if value_text == "-":
+                    self.logger.debug(f"Found placeholder '-' for label {label_text} returning None")
+                    return None
+                return value_text
+
         return None
 
     def _parse_direct_HTML_tag_listings(
@@ -294,10 +317,6 @@ class ChronoScraperTool(BaseTool):
             try:
                 # probably put these hardcoded tags in a config file later
                 # abstract some stuff also
-                print("000000000000000000000000000")
-                print(elem.prettify())
-                print("000000000000000000000000000")
-
                 link_element = elem.select_one("a.js-article-item.article-item")
                 html_listing_url_relative = (
                     link_element["href"] if link_element and link_element.has_attr("href") else None
@@ -308,21 +327,19 @@ class ChronoScraperTool(BaseTool):
                     else html_listing_url_relative
                 )
 
-                main_title_div = elem.select_one("div.text-sm.text-sm-md.text-bold.text-ellipsis")
+                main_title_div = elem.select_one("div.text-sm.text-bold.text-ellipsis")
                 main_title_html = main_title_div.get_text(strip=True) if main_title_div else None
-                sub_title_div = elem.select_one("div.text-sm.text-sm-md.text-ellipsis.m-b-2")
+                sub_title_div = elem.select_one("div.text-sm.text-ellipsis.m-b-2")
                 sub_title_html = sub_title_div.get_text(strip=True) if sub_title_div else None
                 html_brand, html_model, html_full_title = self._parse_brand_model_from_title(
                     main_title_html, sub_title_html
                 )
 
                 price_container = elem.select_one("div.text-lg.text-sm-xlg.text-bold")
-                print(price_container)
                 price_text_raw_html = price_container.get_text(strip=True) if price_container else None
                 html_price, html_currency = self._extract_price_currency(price_text_raw_html)
 
                 details_container = elem.select_one("div.d-sm-flex.m-b-sm-3.flex-wrap")
-                print(html_price, html_currency)
                 movement_str = self._get_details_from_pairs(details_container, "Movement")
                 case_material_str = self._get_details_from_pairs(details_container, "Case material")
                 year_str = self._get_details_from_pairs(details_container, "Year of production")
@@ -330,18 +347,6 @@ class ChronoScraperTool(BaseTool):
                 location_str = self._get_details_from_pairs(details_container, "Location")
                 reference_str = self._get_details_from_pairs(details_container, "Reference number")
                 condition_str = self._get_details_from_pairs(details_container, "Condition")
-                # print(html_listing_url)
-                # print(html_full_title)
-                # print(html_brand)
-                # print(html_model)
-                # print(html_price)
-                # print(html_currency)
-                # print(movement_str)
-                # print(case_material_str)
-                # print(year_str)
-                # print(condition_str)
-                # print(location_str)
-                # print(reference_str)
 
                 if html_listing_url and html_full_title and html_price is not None:
                     listing = ScrapedListingData(
@@ -514,7 +519,7 @@ if __name__ == "__main__":
                 parsed_data = ScrapedListingsData(**response.data)
                 logger.info(f"Successfully scraped {len(parsed_data.scraped_items)} items for '{test_search_query}'.")
                 if parsed_data.scraped_items:
-                    for i, item_data in enumerate(parsed_data.scraped_items[:3]):
+                    for i, item_data in enumerate(parsed_data.scraped_items[:6]):
                         logger.info(f"Item {i + 1}: {item_data.model_dump_json(indent=2)}")
         finally:
             await scraper_tool._close_browser()
