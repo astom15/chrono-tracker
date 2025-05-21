@@ -7,6 +7,7 @@ from typing import Any
 import asyncpg
 
 from core.protocol_definitions import (
+    QueryLatestListingsData,
     QueryLatestListingsParams,
     SaveListingParams,
     SaveListingsData,
@@ -197,6 +198,94 @@ class DatabaseTool(BaseTool):
             listings_saved_count=stored_count, listings_not_saved_count=len(params.listings_data) - stored_count
         )
 
+    async def _handle_query_latest_listings(self, params: QueryLatestListingsParams) -> QueryLatestListingsData:
+        "Handles querying db for listings matching criteria"
+        self.logger.info(f"Query DB for listings matching criteria: {params.model_dump_json(indent=2)}")
+        pool = await self._get_pool()
+        base_query_select_fields = """
+            id,
+            input_sku_attributes,
+            scraped_timestamp,
+            listing_url,
+            listing_title,
+            price,
+            currency,
+            condition,
+            production_year,
+            location,
+            reference_number,
+            brand,
+            model,
+            movement,
+            case_material
+        """
+        base_query = f"""
+        WITH RankedListings AS (
+            SELECT *,
+                ROW_NUMBER() OVER (PARTITION BY listing_url ORDER BY scraped_timestamp DESC) AS rn
+            FROM listings
+            WHERE input_sku_attributes @> $1::jsonb
+                OR (input_sku_attributes IS NULL AND $1::jsonb IS NULL)
+            )
+        SELECT {base_query_select_fields} FROM RankedListings WHERE RN = 1
+        """
+        conditions = []
+        query_params: list[Any] = [params.input_sku_attributes_json]
+        param_index = 2
+        if params.target_condition:
+            conditions.append(f"LOWER(condition) = LOWER(${param_index})")
+            query_params.append(params.target_condition)
+            param_index += 1
+        if params.target_year_min is not None:
+            conditions.append(f"production_year >= ${param_index}")
+            query_params.append(params.target_year_min)
+            param_index += 1
+        if params.target_year_max is not None:
+            conditions.append(f"production_year <= ${param_index}")
+            query_params.append(params.target_year_max)
+            param_index += 1
+        if params.target_location:
+            conditions.append(f"LOWER(location) = LOWER(${param_index})")
+            query_params.append(params.target_location)
+            param_index += 1
+        if params.exclude_keywords:
+            for _, keyword in enumerate(params.exclude_keywords):
+                conditions.append(f"listing_title NOT ILIKE ${param_index}")
+                query_params.append(f"%{keyword}%")
+                param_index += 1
+        final_query = base_query
+        if conditions:
+            final_query = f"""
+            WITH RankedListings AS (
+                SELECT 
+                s1.*,
+                ROW_NUMBER() OVER (PARTITION BY s1.listing_url ORDER BY s1.scraped_timestamp DESC) AS rn
+                FROM listings s1
+                WHERE s1.input_sku_attributes @> $1::jsonb
+                    OR (s1.input_sku_attributes IS NULL AND $1::jsonb IS NULL)
+            )
+                SELECT {base_query_select_fields}
+                FROM RankedListings
+                WHERE rn = 1 AND ({" AND ".join(conditions)})
+                ORDER BY price ASC NULLS LAST LIMIT ${param_index}
+            """
+        else:
+            final_query = base_query + f" ORDER BY price ASC NULLS LAST LIMIT ${param_index}"
+
+        query_params.append(params.limit)
+        self.logger.debug(f"Executing DB Query: {final_query} with params: {query_params}")
+        fetched_listings: list[ScrapedListingData] = []
+        async with pool.acquire() as connection:
+            try:
+                records = await connection.fetch(final_query, *query_params)
+                for record_dict in records:
+                    record = dict(record_dict)
+                    fetched_listings.append(ScrapedListingData(**record))
+                    self.logger.info(f"Fetched {len(fetched_listings)} listings")
+            except Exception:
+                self.logger.exception("Error querying latest listings: {e}")
+        return QueryLatestListingsData(listings=fetched_listings)
+
 
 async def test_batch_insert_performance(db_tool: DatabaseTool, num_records: int = 1000):
     logger = logging.getLogger("TestBatchPerformance")
@@ -224,7 +313,7 @@ async def test_batch_insert_performance(db_tool: DatabaseTool, num_records: int 
                 reference_number=f"REF{i}",
             )
         )
-
+    print(len(dummy_listings))
     pool = await db_tool._get_pool()
 
     async def insert_with_multi_values(connection, batch_data):
@@ -236,7 +325,7 @@ async def test_batch_insert_performance(db_tool: DatabaseTool, num_records: int 
         base_sql_columns = """
             INSERT INTO listings (
                 input_sku_attributes, listing_url, listing_title, brand, model,
-                price, currency, condition, production_year, location, 
+                price, currency, condition, production_year, location,
                 movement, case_material, reference_number, scraped_timestamp
             ) VALUES 
         """
@@ -297,9 +386,6 @@ async def test_batch_insert_performance(db_tool: DatabaseTool, num_records: int 
         duration_multi_values = end_time_multi_values - start_time_multi_values
         logger.info(f"Multi-VALUES INSERT: {inserted_mv} records in {duration_multi_values:.4f} seconds.")
 
-        logger.info("Truncating listings table again for executemany test...")
-        await conn.execute("TRUNCATE TABLE listings RESTART IDENTITY;")
-
     logger.info("--- Batch Insert Performance Test Finished ---")
 
 
@@ -344,7 +430,7 @@ if __name__ == "__main__":
             )
             store_params = SaveListingParams(listings_data=[test_listing_1])
             store_request = ToolRequest(
-                tool_name="DatbaseTool", action="save_listings", params=store_params.model_dump()
+                tool_name="DatabaseTool", action="save_listings", params=store_params.model_dump()
             )
             logger.info(f"Sending store_listings request (main test): {store_request.model_dump_json(indent=2)}")
             response_store = await db_tool.execute(store_request)
@@ -353,7 +439,7 @@ if __name__ == "__main__":
             print(response_store.model_dump_json(indent=2))
 
             # --- Now run the performance test ---
-            await test_batch_insert_performance(db_tool, num_records=500)  # Test with 100 records for speed
+            await test_batch_insert_performance(db_tool, num_records=500)
         except Exception as e:
             logger.exception(f"Error in main test runner: {e}")
         finally:

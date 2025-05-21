@@ -103,7 +103,7 @@ class QueryLatestListingsParams(BaseModel):
     target_year_max: int | None = None
     target_location: str | None = None
     exclude_keywords: list[str] | None = None
-    limit: int = 20
+    limit: int = 50
 
 
 class QueryLatestListingsData(BaseModel):

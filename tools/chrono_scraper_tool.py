@@ -329,7 +329,7 @@ class ChronoScraperTool(BaseTool):
 
                 main_title_div = elem.select_one("div.text-sm.text-bold.text-ellipsis")
                 main_title_html = main_title_div.get_text(strip=True) if main_title_div else None
-                sub_title_div = elem.select_one("div.text-sm.text-ellipsis.m-b-2")
+                sub_title_div = elem.select_one("div.text-sm.text-ellipsis.m-b-sm-2")
                 sub_title_html = sub_title_div.get_text(strip=True) if sub_title_div else None
                 html_brand, html_model, html_full_title = self._parse_brand_model_from_title(
                     main_title_html, sub_title_html
