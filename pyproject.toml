@@ -1,7 +1,7 @@
 [tool.ruff]
 # Enable all rules by default
 lint.select = ["E", "F", "I", "N", "W", "B", "C4", "UP", "PL", "RUF"]
-lint.ignore = ["N802"]
+lint.ignore = ["N802", "PLR0915"]
 
 # Allow autofix for all enabled rules (when `--fix` is used)
 lint.fixable = ["ALL"]

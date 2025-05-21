@@ -144,7 +144,9 @@ class DatabaseTool(BaseTool):
                                 ]
                             )
                         except Exception as e:
-                            self.logger.exception(f"Error preparing listing {listing.listing_url}: {e}")
+                            self.logger.exception(
+                                f"Error preparing listing {getattr(listing, 'listing_url', 'N/A')}): {e}"
+                            )
                             failed_count += 1
                     if not values_parts:
                         continue
