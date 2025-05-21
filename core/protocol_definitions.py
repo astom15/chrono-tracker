@@ -59,7 +59,7 @@ class ScrapeListingsParams(BaseModel):
 class ScrapedListingData(BaseModel):
     "Single scraped listing data sans ID."
 
-    input_search_query_attributes: dict[str, Any] | None = None
+    input_sku_attributes: dict[str, Any] | None = None
     listing_url: str
     brand: str | None = None
     model: str | None = None
@@ -72,7 +72,7 @@ class ScrapedListingData(BaseModel):
     price: float | str | None = None
     currency: str | None = None
     condition: str | None = None
-    year_of_production: int | None = None
+    production_year: int | None = None
     location: str | None = None
     seller_name: str | None = None
 

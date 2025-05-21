@@ -1,5 +1,7 @@
 import json
 import logging
+import time
+from datetime import UTC
 from typing import Any
 
 import asyncpg
@@ -8,6 +10,7 @@ from core.protocol_definitions import (
     QueryLatestListingsParams,
     SaveListingParams,
     SaveListingsData,
+    ScrapedListingData,
     ToolRequest,
     ToolResponse,
 )
@@ -100,9 +103,25 @@ class DatabaseTool(BaseTool):
         failed_count = 0
         # might need to figure out the optimal size
         batch_size = self.config.get("DB_BATCH_SIZE", 50)
-        base_sql = self.config.get("BASE_SQL_INSERT_LISTINGS", "")
+        base_sql = """
+            INSERT INTO listings (
+                input_sku_attributes,
+                listing_url,
+                listing_title,
+                brand,
+                model,
+                price,
+                currency,
+                movement,
+                case_material,
+                production_year,
+                condition,
+                location,
+                reference_number,
+                scraped_timestamp) VALUES
+            """
         num_columns = 14
-        from datetime import UTC, datetime
+        from datetime import datetime
 
         async with pool.acquire() as connection:
             async with connection.transaction():
@@ -116,9 +135,7 @@ class DatabaseTool(BaseTool):
                     for listing in batch:
                         try:
                             input_attrs_json = (
-                                json.dumps(listing.input_search_query_attributes)
-                                if listing.input_search_query_attributes
-                                else None
+                                json.dumps(listing.input_sku_attributes) if listing.input_sku_attributes else None
                             )
                             placeholders = [f"${j}" for j in range(param_index, param_index + num_columns)]
                             values_parts.append(f"({','.join(placeholders)})")
@@ -136,7 +153,7 @@ class DatabaseTool(BaseTool):
                                     listing.currency,
                                     listing.movement,
                                     listing.case_material,
-                                    listing.year_of_production,
+                                    listing.production_year,
                                     listing.condition,
                                     listing.location,
                                     listing.reference_number,
@@ -179,3 +196,179 @@ class DatabaseTool(BaseTool):
         return SaveListingsData(
             listings_saved_count=stored_count, listings_not_saved_count=len(params.listings_data) - stored_count
         )
+
+
+async def test_batch_insert_performance(db_tool: DatabaseTool, num_records: int = 1000):
+    logger = logging.getLogger("TestBatchPerformance")
+    logger.info(f"--- Starting Batch Insert Performance Test ({num_records} records) ---")
+    from datetime import datetime
+
+    # 1. Generate Dummy Data
+    dummy_listings: list[ScrapedListingData] = []
+    base_url = "https://www.chrono24.com/test/item"
+    for i in range(num_records):
+        dummy_listings.append(
+            ScrapedListingData(
+                input_sku_attributes={"Test": f"Batch{i}"},
+                listing_url=f"{base_url}_{i}.htm",
+                listing_title=f"Test Watch Batch {i}",
+                brand="PerfTestBrand",
+                model=f"ModelX{i}",
+                price=float(1000 + i),
+                currency="USD",
+                condition="New",
+                production_year=2024,
+                location="Test Location",
+                movement="Automatic",
+                case_material="Steel",
+                reference_number=f"REF{i}",
+            )
+        )
+
+    pool = await db_tool._get_pool()
+
+    async def insert_with_multi_values(connection, batch_data):
+        # This is your existing logic from _handle_store_listings, adapted
+        total_inserted_count = 0
+        total_failed_count = 0  # Not strictly used for timing but good for consistency
+        batch_size = db_tool.config.get("db_batch_insert_size", 50)
+
+        base_sql_columns = """
+            INSERT INTO listings (
+                input_sku_attributes, listing_url, listing_title, brand, model,
+                price, currency, condition, production_year, location, 
+                movement, case_material, reference_number, scraped_timestamp
+            ) VALUES 
+        """
+        num_columns_to_insert = 14
+
+        for i in range(0, len(batch_data), batch_size):
+            batch = batch_data[i : i + batch_size]
+            if not batch:
+                continue
+            values_parts = []
+            param_values: list[Any] = []
+            current_placeholder_idx = 1
+            for listing in batch:
+                input_attrs_json = json.dumps(listing.input_sku_attributes) if listing.input_sku_attributes else None
+                placeholders = [
+                    f"${j}" for j in range(current_placeholder_idx, current_placeholder_idx + num_columns_to_insert)
+                ]
+                values_parts.append(f"({','.join(placeholders)})")
+                current_placeholder_idx += num_columns_to_insert
+                param_values.extend(
+                    [
+                        input_attrs_json,
+                        listing.listing_url,
+                        listing.listing_title,
+                        listing.brand,
+                        listing.model,
+                        listing.price,
+                        listing.currency,
+                        listing.condition,
+                        listing.production_year,
+                        listing.location,
+                        listing.movement,
+                        listing.case_material,
+                        listing.reference_number,
+                        datetime.now(UTC),
+                    ]
+                )
+            if not values_parts:
+                continue
+            batch_sql = base_sql_columns + ",\n".join(values_parts)
+            result_status_string: str | None = await connection.execute(batch_sql, *param_values)
+            if result_status_string and result_status_string.startswith("INSERT"):
+                try:
+                    total_inserted_count += int(result_status_string.split(" ")[2])
+                except (IndexError, ValueError):
+                    total_inserted_count += len(batch)  # Fallback assumption
+            return total_inserted_count
+
+    async with pool.acquire() as conn:
+        logger.info("Truncating listings table for performance test...")
+        await conn.execute("TRUNCATE TABLE listings RESTART IDENTITY;")
+
+        logger.info("Testing Multi-VALUES INSERT method...")
+        start_time_multi_values = time.perf_counter()
+        async with conn.transaction():
+            inserted_mv = await insert_with_multi_values(conn, dummy_listings)
+        end_time_multi_values = time.perf_counter()
+        duration_multi_values = end_time_multi_values - start_time_multi_values
+        logger.info(f"Multi-VALUES INSERT: {inserted_mv} records in {duration_multi_values:.4f} seconds.")
+
+        logger.info("Truncating listings table again for executemany test...")
+        await conn.execute("TRUNCATE TABLE listings RESTART IDENTITY;")
+
+    logger.info("--- Batch Insert Performance Test Finished ---")
+
+
+if __name__ == "__main__":
+    import asyncio
+    import os
+
+    async def main_test_runner():
+        from core.config_loader import get_setting
+        from core.config_loader import load_configurations as load_app_configurations
+        from core.logging_config import setup_logging
+
+        load_app_configurations()
+        log_level_str = get_setting("General", "log_level", default="INFO")
+        numeric_log_level = getattr(logging, log_level_str.upper(), logging.INFO)
+        setup_logging(log_level=numeric_log_level)
+        logger = logging.getLogger("TestBatchPerformance")
+        db_config = {
+            "DB_HOST": "localhost",
+            "DB_PORT": "5432",
+            "DB_USER": "andretom",
+            "DB_NAME": "watch_dev",
+            "DB_MIN_POOL_SIZE": 1,
+            "DB_MAX_POOL_SIZE": 2,
+            "DB_BATCH_SIZE": 50,
+        }
+        if not all([db_config["DB_NAME"], db_config["DB_USER"], db_config["DB_HOST"]]):
+            logger.error(
+                "Database connection details not fully configured for test. Check .env or main_config.ini [PostgreSQL] section."
+            )
+            return
+        db_tool = DatabaseTool(config=db_config)
+        try:
+            test_listing_1 = ScrapedListingData(
+                input_sku_attributes={"Test": "Batch1"},
+                listing_url="https://www.chrono24.com/test/item1.htm",
+                listing_title="Test Watch Batch 1",
+                brand="PerfTestBrand",
+                model="ModelX1",
+                price=1000,
+                currency="USD",
+            )
+            store_params = SaveListingParams(listings_data=[test_listing_1])
+            store_request = ToolRequest(
+                tool_name="DatbaseTool", action="save_listings", params=store_params.model_dump()
+            )
+            logger.info(f"Sending store_listings request (main test): {store_request.model_dump_json(indent=2)}")
+            response_store = await db_tool.execute(store_request)
+
+            logger.info("Received response from store_listings (main test):")
+            print(response_store.model_dump_json(indent=2))
+
+            # --- Now run the performance test ---
+            await test_batch_insert_performance(db_tool, num_records=500)  # Test with 100 records for speed
+        except Exception as e:
+            logger.exception(f"Error in main test runner: {e}")
+        finally:
+            await db_tool._close_pool()
+            # Create dummy config if needed for standalone run
+
+    if not os.path.exists("config"):
+        os.makedirs("config")
+    if not os.path.exists("config/main_config.ini"):
+        with open("config/main_config.ini", "w") as f:
+            f.write("[General]\nlog_level=DEBUG\n")
+            f.write("[PostgreSQL]\ndb_host=localhost\ndb_port=5432\ndb_name=watch_dev\ndb_user=your_user\n")
+            f.write("[DatabaseTool]\nbatch_insert_size=50\n")
+        print(
+            "WARNING: Created a minimal dummy config/main_config.ini for test. Please ensure your actual files are configured."
+        )
+
+    asyncio.run(main_test_runner())
