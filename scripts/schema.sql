@@ -10,6 +10,13 @@ CREATE TABLE IF NOT EXISTS listings (
     production_year INTEGER,
     location VARCHAR(255),
     seller_name VARCHAR(255)
+    brand VARCHAR(255)
+    model VARCHAR(25)
+    movement VARCHAR(25)
+    case_material VARCHAR(25)
+    dial_color VARCHAR(25)
+    dial VARCHAR(25)
+    reference_number VARCHAR(50)
 );
 
 CREATE INDEX IF NOT EXISTS idx_listings_listing_url ON listings (listing_url);
@@ -19,7 +26,8 @@ CREATE INDEX IF NOT EXISTS idx_listings_price ON listings (price);
 CREATE INDEX IF NOT EXISTS idx_listings_condition ON listings (condition);
 CREATE INDEX IF NOT EXISTS idx_listings_year ON listings (production_year);
 CREATE INDEX IF NOT EXISTS idx_listings_location ON listings (location);
-
+CREATE INDEX IF NOT EXISTS idx_listings_model ON listings (model);
+CREATE INDEX IF NOT EXISTS idx_listings_brand ON listings (brand);
 
 CREATE TABLE IF NOT EXISTS analysis_results (
     id SERIAL PRIMARY KEY,
